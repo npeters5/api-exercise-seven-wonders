@@ -1,9 +1,35 @@
 require 'httparty'
+require "awesome_print"
 
 #Starter Code:
-seven_wonders = ["Great Pyramind of Giza", "Hanging Gardens of Babylon", "Colossus of Rhodes", "Pharos of Alexandria", "Statue of Zeus at Olympia", "Temple of Artemis", "Mausoleum at Halicarnassus"]
+seven_wonders = ["Great Pyramid of Giza", "Hanging Gardens of Babylon", "Colossus of Rhodes", "Pharos of Alexandria", "Statue of Zeus at Olympia", "Temple of Artemis", "Mausoleum at Halicarnassus"]
 
 
+class Seven
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+  end
+
+  def location_information
+    encoded_uri = URI.encode("https://maps.googleapis.com/maps/api/geocode/json?address=#{name}&key=AIzaSyAHU61kyNhjp7dna0lhH_0tB352tQwaq5A")
+
+    response = HTTParty.get(encoded_uri)
+
+    return response.parsed_response["results"][0]["geometry"]["location"]
+  end
+
+end
+
+output = {}
+
+seven_wonders.each do |wonder|
+  a = Seven.new(wonder)
+  output[a.name] = a.location_information
+end
+
+ap output
 
 
 
